@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="css/font-awesome.css" />
+  <link rel="stylesheet" href="css/bootstrap.min.css" />
+  <title>pdfSearch Results</title>
+</head>
+<body>
+  <div class="container">
+    <h1><%= @subtitle %></h1>
+    <div class="row">
+
+      <div class="col-xs-12 col-sm-6 col-md-6">
+        <p>
+          <a href="index.html"><i class="fa fa-lg fa-heart pull-right"> </i>Index </a>
+
+        </p>
+        <div class="row">
+          <form  id="search-form" method="POST" action="/search">
+            <div class="col-xs-9">
+            <input class="form-control"  type="text" id="search-text" name="query" value='<%= @search_query %>'>
+            </div>
+            <div class="col-xs-3">
+            <input class="btn btn-success" id="search-btn" type="submit" name="submit" value="Search">
+            </div>
+          </form>
+        </div>
+
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12 col-sm-6 col-md-6">
+        <hr>
+        <div class="row">
+           
+            <h4 class="pull-left">
+              Query:<span style="color: blue"><b> <%=@search_query%></b></span> ,  
+              Count: <span style="color: blue"><b><%= @num %></b></span></h4>
+          
+
+        </div>
+        <div class="search-results">
+          <% @docs.each do |doc| %>
+            <article class="row">
+              <h4>  
+              <a target="_blank" href="/pdfview?url=<%=doc['url']%>&page=<%=doc['paragraph_page']%>&q=<%=@search_query%>">
+               <img src="img/pdf.png" width="18" /> <%=doc['paragraph_header'] %>
+             </a>
+              </h4>
+              <cite style="color:green"> <%=doc['url'] %>,    
+                <span style="color: darkred"><b><%=doc['paragraph_page'] %> page</b></span>
+              </cite>
+              <p>
+              <%=doc['paragraph_txt'] %>
+              </p>
+            </article>
+          <% end %>
+      </div>
+      </div>
+    </div>
+  </div>
+  <script src = "js/main.js"></script>
+  <script src="js/jquery-2.2.2.js" ></script>
+ 
+  <script src="js/bootstrap-3.3.7.js"></script>
+</body>
+</html>

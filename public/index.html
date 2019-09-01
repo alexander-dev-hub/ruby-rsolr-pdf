@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <title>pdfsearchApi Project </title>
+    <link rel="stylesheet" href="css/main.css"/>
+    <script>
+    function  hidequeryresult()
+    {
+        var status=searchresult.style.display;
+        if(status=="block") searchresult.style.display="none";
+        else searchresult.style.display="block";
+    }
+    function  showpane(pane)
+    {
+		var adiv;
+		
+        var hidepanes= document.getElementsByClassName("resultpane");
+        for(i=0;i< hidepanes.length;i++ )
+        {
+			adiv=hidepanes[i];
+			//console.log(adiv.tagName);	
+			adiv.style.display= "none";
+         }
+        var divpane=document.getElementById(pane);
+        divpane.style.display= 'block';
+
+    }
+    </script>
+
+</head>
+<body onload="showpane('setup');">
+<div class="title">
+    <h1>pdfsearchApi Project</h1>
+</div>
+<div id="main">
+    <div class="container">
+
+        <div id="menu">
+            <ul>
+                <li class="mainitem"><a href="javascript:showpane('setup')">Setup</a></li>
+                <li class="mainitem"><a href="javascript:showpane('apidoc')">API doc</a> </li>
+                <li class="mainitem"><a href="/search" target="_blank">Search</a> </li>
+                <li class="mainitem">API Test</li>
+                <li class="subitem"><a href="javascript:showpane('api_search')">/api/search</a></li>
+                <li class="subitem"><a href="javascript:showpane('api_post')">/api/post</a></li>
+                <li class="subitem"><a href="javascript:showpane('api_del')">/api/delete</a> </li>
+                <li class="subitem"><a href="javascript:showpane('api_delall')">/api/deleteAll</a> </li>
+                <li class="subitem"><a href="javascript:showpane('api_checksolr')">/api/checksolr</a> </li>
+            </ul>
+
+        </div>
+        <div id="content">
+            <div class="resultpane" id="api_search">
+                <div class="content-header">
+                    <h2>Test Seach API / Search </h2>
+                    <p> # curl   http://localhost:3000/api/search?q=XXX</p>
+                </div>
+
+                <div>
+
+                    <p>Query: <input type="text" id="query" class="input query" name="query" size="20" required/>
+                        <button   id="searchbtn" class="primary submit-btn">Search</button>
+                        <span class="hideresult" onclick="javascript:hidequeryresult()">[hide]</span>
+                    </p>
+
+                    <div id="searchresult" class="result">result</div>
+                </div>
+            </div>
+            <div class="resultpane" id="api_post">
+                <div class="content-header">
+                    <h2>Test Post API / File Upload </h2>
+                    <p> # curl -X POST http://localhost:3000/api/post -d @xxx.pdf -H "Content-Type: application/pdf"</p>
+                </div>
+
+                <div class="single-upload">
+                    <h3>Upload Single File</h3>
+                    <form id="frmSingleUpload" name="frmSingleUpload" enctype="multipart/form-data">
+                        <input id="inputSingleFile" type="file" name="file" class="input" required/>
+                        <button type="submit" class="primary submit-btn">Upload</button>
+                    </form>
+
+                </div>
+                <div class="multi-upload">
+                    <h3>Upload Multiple Files</h3>
+                    <form id="frmMultiUpload" method="post" enctype="multipart/form-data">
+                        <input id="inputMultiFile" type="file" name="files[]" class="input" multiple required/>
+                        <button type="submit" class="primary submit-btn">Uploads</button>
+                    </form>
+
+                </div>
+                <div class="upload-response">
+                    <div id="fileUploadError"></div>
+                    <div id="fileUploadSuccess"></div>
+                </div>
+            </div>
+            <div class="resultpane" id="api_del">
+                <div class="content-header">
+                    <h2>Test delete API / Search </h2>
+                    <p> # curl   http://localhost:3000/api/delete?resource_name=XXX</p>
+                </div>
+
+                <div>
+
+                    <p>Name: <input type="text" id="inp_rscname" class="input query" name="resource_name" size="20" required/>
+                        <button type="submit" id="delbtn" class="primary submit-btn">Delete</button></p>
+                    <div id="delresult"></div>
+                </div>
+            </div>
+             <div class="resultpane" id="api_delall">
+                <div class="content-header">
+                    <h2>Test deleteAll API / Search </h2>
+                    <p> # curl   http://localhost:3000/api/deleteAll</p>
+                </div>
+
+                <div>
+                    <p style="color: red;">Caution!. All solr index will be erased. </p>
+                    <p> <button type="submit" id="delallbtn" class="primary submit-btn">Delete All</button></p>
+                    <div id="delallresult"></div>
+                </div>
+            </div>
+            <div class="resultpane" id="api_checksolr">
+                <div class="content-header">
+                    <h2>Test  checksolr API / Search </h2>
+                    <p> # curl   http://localhost:3000/api/checksolr</p>
+                </div>
+
+                <div>
+                    <p>Check solr is alive.</p>
+                    <p> <button type="submit" id="checksolrbtn" class="primary submit-btn">Check Solr</button>
+                        <button id="clearbtn" class="primary">Clear</button>
+                    </p>
+                    <div id="checksolrresult"></div>
+                </div>
+            </div>
+            <div class="resultpane" id="setup">
+                <h2>Setup on Mac OS X</h2>
+
+                <h3>1. install bundle</h3>
+                <p class="setup">
+                    cd  /projectfolder/<br/>
+                    sudo chmod -R 755  /Library/Ruby/Gems/2.3.0/<br/>
+                    sudo gem install bundler<br/>
+                    bundle install --local<br/>
+
+                </p>
+                       
+                <h3>2. copy pdfsearchAPI and edit config.rb</h3>
+               
+                    <h4>copy project and chmod</h4>
+                    <p class="setup">
+                    chmod -R 755 ./pdfsearchApi
+                    </p>
+                    <h4>config.rb</h4>
+                    <p class="setup">
+                    set :filesdir, '/Users/mira/Desktop/pdfsearchAPI/public/files' <span><= set pdf file folder</span><br/>
+                    set :homedir, '/files'                                         <span><= set web dir of pdf files</span><br/>
+                    set :solrbase, 'http://localhost:8983/solr/'                    <span><= solr base address</span><br/>
+                    set :solrcore, 'docs'                                           <span><= solr core name</span><br/>
+                    </p>
+
+                <h3>3. run</h3>
+                <p class="setup">
+                cd ./Desktop/pdfsearchApi/<br/>
+                bundle exec ruby main.rb<br/>
+                <span>or</span><br/>
+                rackup  -p 3000<br/>
+
+                </p>
+                <h3>4. test</h3>
+                <p  class="api"><a href="http://localhost:3000/" target="_blank">http://localhost:3000/</a></p>
+            </div>
+            <div class="resultpane" id="apidoc">
+                <h2>Api Doc</h2>
+                <div style="position: absolute;top:70px;left: 45%;width: 360px;">
+                    <h4 style="color:orangered"> input para format: </h4>
+                       <p> /api/xxx?key1=val1&key2=val2<br/><br/>
+                    example:
+                        /api/search?q=DM&prety=true</p>
+                     <h4 style="color:orangered">output json format:</h4>
+                        <p>
+                        {"status":"d", "msg":"massage", "docs":[]} <br/><br/>
+                    - search example: /api/search?q=DM<br/><br/>
+                    {"status":"0",
+                     "msg":"106"
+                     "docs": [
+                            {
+                            "paragraph_header": "DM Domain (Demographics)",
+                            "paragraph_txt": "In the DM domain, each subject should have only one single ",
+                            "url": "f:\\testdoc\\2018 03 Technical Conformance Guide v4.1.pdf",
+                            "year": "2018",
+                            "month": "03",
+                            "version": "v4.1",
+                            "sorting": "2018_03",
+                            "stream_size": 154323,
+                            "resource_name": "2018 03 Technical Conformance Guide v4.1.pdf",
+                            "content_type": "pdf",
+                            "id": "5b89074f-cd03-4de8-920c-1a3c9799fdc7",
+                            "score": 130.91658
+                            },
+
+                             ...]}
+                        </p>
+                    <h4 style="color:orangered"> Status code and msg </h4>
+                    <p>
+                        # 0 => Operation Success <br/>
+                        # 1=> File R/W Fail <br/>
+                        # 2=> Solr Sever Fail <br/>
+                        # 9=> Other Error<br/>
+
+                    </p>
+
+                </div>
+                <h3>/api/search api</h3>
+                <p class="api">
+                     desc:<br />
+                    #   search using rsolr<br />
+                    method: get<br />
+                    param:<br />
+                    #   q:search text<br />
+                    #   start: start offset, default 0<br />
+                    #   pretty: json format? default: false<br />
+                    result json:<br />
+                    #   status: 0<br />
+                    #   msg: searched count<br />
+                    #   docs: searched docs json<br />
+                    fail raise:<br />
+                    #   source: solr error<br />
+                </p>
+
+                <h3> /api/upload api</h3>
+                <p class="api">
+                    method: post<br />
+                    desc:<br />
+                    #   upload single file<br />
+                     param<br />
+                    #   file: file<br />
+                    result json:<br />
+                    #   status: 0<br />
+                    #   msg: update_success<br />
+                    #   docs: filename<br />
+                    fail raise<br />
+                    #   source: file not pdf, directory no exist<br />
+                </p>
+
+                <h3> /api/uploads api</h3>
+                <p class="api">
+                    method: post<br />
+                    desc:<br />
+                    #   upload multiple file<br />
+                    param<br />
+                    #   files:  array of files<br />
+                    result json:<br />
+                    #   status: 0<br />
+                    #   msg: update_success<br />
+                    #   docs: filename<br />
+                    fail raise<br />
+                    #   source: file not pdf, directory no exist<br />
+                </p>
+
+                <h3> /api/delete get api</h3>
+                <p class="api">
+                    desc:<br />
+                    #   delete file  and solr index<br />
+                    param:<br />
+                    #   resource_name: file name<br />
+                    result json:<br />
+                    #   status: 0<br />
+                    #   msg: delete_success<br />
+                    fail raise<br />
+                    #  source: file not exist or solr error<br />
+                </p>
+
+                <h3> /api/deleteAll get api</h3>
+                <p class="api">
+                    desc:<br />
+                    #   delete all solr index<br />
+                    param:<br />
+                    #   none<br />
+                    result json:<br />
+                    #   status: 0<br />
+                    fail raise<br />
+                    #   source: solr error<br />
+                </p>
+                <h3> /api/check get api</h3>
+                <p class="api">
+                    desc:<br />
+                    #   check alive of solr server<br />
+                    method: get<br />
+                    param:<br />
+                    #   none<br />
+                    result json:<br />
+                    #   status: 0<br />
+
+                    fail raise<br />
+                    #   source: solr error<br />
+                </p>
+            </div>
+            
+        </div>
+    </div>
+</div>
+<script src="js/main.js"></script>
+</body>
+</html>

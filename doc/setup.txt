@@ -1,0 +1,45 @@
+pdfsearchAPI
+
+
+1. install bundle
+sudo chmod -R 755  /Library/Ruby/Gems/2.3.0/
+sudo gem install bundler
+bundle install --local
+
+
+2. copy pdfsearchAPI and edit config.rb
+
+
+	set :filesdir, '/Users/mira/Desktop/pdfsearchAPI/public/files' <= set pdf file folder
+	set :homedir, '/files'										   <= set web dir of pdf files
+	set :solrbase, 'http://localhost:8983/solr/'					<= solr base address
+	set :solrcore, 'docs'											<= solr core name
+
+3. run
+bundle exec ruby main.rb
+or
+rackup 	-p 3000
+4. notice
+
+install ruby app to http server
+Here's our company's basic setup for Ruby microservices APIs:
+1) Put your Ruby apps in a special folder
+We like /srv/rubyapps/
+2) Choose a port for your application
+Don't use the default port. I prefer ones in the 3000 series (E.g., 3000, 3010, 3020, ...) for Ruby apps.
+3) Setup a reverse proxy to access your application on that port
+Depending on your server, there are lots of Tutorials for Apache or Nginx.
+That way /pdfsearchApi will redirect to your port. Ex. myserver.com/pdfsearchApi goes to myserver.com:3000/pdfsearchApi/
+4) Run your application
+If you're not using bundler, use bundle to run the app. To run on a specific port, use "bundle exec rackup -p "
+You should then be able to access the application. If you run into trouble, some common problems include 1) the port is being blocked to the outside world, 2) you tried to access it before the app was running and now you still get 503s even though the app is running (restart your webserver to fix it).
+Bonus - running your app as a Unix service
+This has enormous benefits. If you can run the Ruby app with another supervisor level app, then you can automatically start it on reboot, automatically restart the app on failures (which can lead to flapping when you have catastrophic problems).
+Originally we used Monit which is typically used for service monitoring but can actually start/stop/restart (start on boot) for a service.
+Now we use foreman and upstart. I highly recommend this pairing, as app supervision is the textbook use case for Upstart. You can skip using Foreman if you have a vanilla configuration, but it is incredibly useful if you need to start other services, set environment variables, etc.
+
+
+
+
+
+
